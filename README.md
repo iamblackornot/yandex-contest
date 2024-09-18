@@ -1,0 +1,1 @@
+Solved tasks from weekend-offer yandex contests
