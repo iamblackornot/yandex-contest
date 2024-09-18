@@ -1,0 +1,6 @@
+5
+foo 1 baz
+main 2 foo bar
+baz 0
+bar 2 baz brr
+brr 1 baz

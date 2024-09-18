@@ -1,0 +1,4 @@
+8
+not ({tag-2} or {tag-3})
+({tag} or [predicate]) and {tag-2}
+(({tag} or [predicate]) and (not {tag-2} or {tag-3}))

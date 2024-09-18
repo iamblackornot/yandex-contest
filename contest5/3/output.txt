@@ -1,0 +1,1 @@
+select id, name from users where family = ? and (group_id = ? or manager_id in (...));
