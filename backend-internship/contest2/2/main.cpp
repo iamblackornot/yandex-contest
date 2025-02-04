@@ -16,7 +16,7 @@ struct Price
 int main()
 {
     std::ifstream input("input.txt");
-    std::ofstream output("output2.txt");
+    std::ofstream output("output.txt");
 
     int dayCount;
     int storagePeriod;
@@ -33,49 +33,43 @@ int main()
 
     int slidingWindowSize = std::min(storagePeriod, dayCount);
     
-    for(int day = 0; day < dayCount + slidingWindowSize - 1; ++day)
+    for(int day = 0; day < dayCount; ++day)
     {
-        if(day < dayCount)
+        int price;
+        input >> price;
+
+        prices[day] = price;
+
+        while (!nextMinimum.empty() 
+            && nextMinimum.back().day > day - slidingWindowSize
+            && nextMinimum.back().value > price)
         {
-            int price;
-            input >> price;
-
-            prices[day] = price;
-
-            while (!nextMinimum.empty() && nextMinimum.back().value > price)
-            {
-                nextMinimum.pop_back();
-            }
-
-            nextMinimum.emplace_back(day, price);
+            nextMinimum.pop_back();
         }
 
-        if(nextMinimum.front().day == day - slidingWindowSize)
+        nextMinimum.emplace_back(day, price);
+    }
+
+    for(int day = 0; day < dayCount; ++day)
+    {
+        Price const& nextMinPrice = nextMinimum.front();
+
+        int fishBought = 0;
+
+        if(nextMinPrice.day == day)
         {
+            fishBought = std::min(slidingWindowSize, dayCount - day) - fishCount;
+            sum += fishBought * (int64_t)nextMinPrice.value;
             nextMinimum.pop_front();
         }
-
-        if(day >= slidingWindowSize - 1)
+        else if(fishCount == 0)
         {
-            Price const& nextMinPrice = nextMinimum.front();
-
-            int fishBought = 0;
-            int buyDay = day - slidingWindowSize + 1;
-
-            if(nextMinPrice.day == buyDay)
-            {
-                fishBought = std::min(slidingWindowSize, dayCount - buyDay) - fishCount;
-                sum += fishBought * (int64_t)nextMinPrice.value;
-            }
-            else if(fishCount == 0)
-            {
-                fishBought = 1;
-                sum += fishBought * (int64_t)prices[buyDay];
-            }
-
-            fishBoughtByDay[buyDay] = fishBought;
-            fishCount += fishBought - 1;
+            fishBought = 1;
+            sum += fishBought * (int64_t)prices[day];
         }
+
+        fishBoughtByDay[day] = fishBought;
+        fishCount += fishBought - 1;
     }
 
     output << sum << "\n";

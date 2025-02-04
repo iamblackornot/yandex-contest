@@ -1,6 +1,11 @@
 *
 !*/
 !**/*.cpp
+!**/*.docx
+!**/*.md
 !**/*.txt
 !.gitignore
 !*.md
+
+backend-internship2
+misc
